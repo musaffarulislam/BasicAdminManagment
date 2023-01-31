@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+  <!-- head -->
+  <%- include('./partials/adminhead.ejs') %>
+
+  <body style="background-color: #ffffff;">
+    
+    <div class="container mt-4">
+        
+        <div class="card shadow mb-4 bg-dark">
+            <div class="card-header d-flex justify-content-between py-3">
+                <h6 class="m-0 me-5 font-weight-bold text-white">Admin Page</h6>
+
+                <form class="d-flex form-inline" action="/admin/search" method="get">
+                    <input class="form-control mr-sm-2  me-4" type="search" placeholder="Search" aria-label="Search" name="username">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#exampleModalCenter">
+                    Add User
+                </button>
+                <a href="/admin/admin-signout"><button type="button" class="btn btn-danger ms-2">Sign Out</button></a>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form id="adduserform" action="/admin/adduser" method="post" onsubmit="return submitform(event)">
+
+                                <div id="error"></div>
+                        
+                                <div class="form-outline mb-3">
+                                    <input type="text" id="username" class="form-control form-control-lg" name="username" />
+                                    <label class="form-label" for="typeUsernameX-1">User Name</label>
+                                </div>
+                                        
+                                <div class="form-outline mb-3">
+                                <input type="email" id="email" class="form-control form-control-lg" name="email" />
+                                <label class="form-label" for="typeEmailX-1">Email</label>
+                                </div>
+            
+                                <div class="d-flex justify-content-between ">
+                                <div class="form-outline mb-3 col-7">
+                                    <input type="text" id="phonenumber" class="form-control form-control-lg" name="phonenumber" />
+                                    <label class="form-label" for="typePhoneX-1">Phone Number</label>
+                                </div>
+                                <div class="col-5  d-flex justify-content-end">
+                                    <div class="form-outline mb-3 col-11 ">
+                                    <input type="number" id="age" class="form-control form-control-lg" name="age" />
+                                    <label class="form-label" for="typeAgeX-1">Age</label>
+                                    </div>
+                                </div>
+                                </div>
+                    
+                                <div class="form-outline mb-3">
+                                <input type="password" id="firstpassword" name="fpassword" class="form-control form-control-lg" />
+                                <label class="form-label" for="typePasswordX-1">Password</label>
+                                </div>
+                    
+                                <div class="form-outline mb-3">
+                                    <input type="password" id="secondpassword" name="spassword" class="form-control form-control-lg" />
+                                    <label class="form-label" for="typeconfPasswordX-1">ConformPassword</label>
+                                </div>
+                    
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Add</button>
+            
+                            </form>
+                
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        </div>
+                    <!-- </form> -->
+                    </div>
+                    </div>
+                </div>               
+            </div>
+
+            <!-- User Details Table -->
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table text-white" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <% if (tablehead.length > 0) { %>
+                                <% tablehead.forEach((head) => { %>
+                                    <tr>
+                                        <th> <%= head.si %></th>
+                                        <th> <%= head.userName %></th>
+                                        <th> <%= head.email %></th>
+                                        <th> <%= head.phoneNumber %></th>
+                                        <th> <%= head.age %></th>
+                                        <!-- <th> <%= head.password %></th> -->
+                                        <th> <%= head.action %></th>
+                                    </tr>
+                                <% }) %>
+                            <% } %>
+                        </thead>
+                        <tbody>
+                            
+                            <% if (users.length > 0) { %>
+                                <% var i=1 %>
+                                <% users.forEach((user) => { %>                
+                                    <tr>
+                                        <td><%= i %></td>
+                                        <td><%= user.username %></td>
+                                        <td><%= user.email %></td>
+                                        <td><%= user.phonenumber %></td>
+                                        <td><%= user.age %></td>
+                                        <!-- <td><%= user.fpassword %></td> -->
+                                        <td>
+                                                    
+                                            <a href="/admin/edit-user/<%= user._id %>"><button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="bi bi-gear"></i></button></a>
+                                            <a href="/admin/delete-user/<%= user._id %>" onclick="return confirm('Are you sure to delete <%= user.username %>')""><button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="bi bi-trash3-fill"></i></button></a>
+
+                                        </td>
+                                    </tr>
+                                    <% i++ %>
+                                <% }) %>                             
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- script -->
+    <%- include('./partials/adminscript.ejs') %>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+<!-- 
+<div class="d-flex">
+    <button type="button" class="btn btn-outline-light me-2" data-toggle="modal" data-target="#exampleModalCenter">
+        <i class="bi bi-gear"></i>
+    </button>
+  <a href="/admin/edit-user"><button class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="bi bi-gear"></i></button></a>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="edituserform" action="/admin/edituser" method="post" onsubmit="return submitform(event)">
+
+                    <div id="error"></div>
+            
+                    <div class="form-outline mb-3">
+                        <input type="text" id="username" class="form-control form-control-lg" name="username" />
+                        <label class="form-label" for="typeUsernameX-1">hello</label>
+                    </div>
+                            
+                    <div class="form-outline mb-3">
+                    <input type="email" id="email" class="form-control form-control-lg" name="email" />
+                    <label class="form-label" for="typeEmailX-1">Email</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between ">
+                    <div class="form-outline mb-3 col-7">
+                        <input type="text" id="phonenumber" class="form-control form-control-lg" name="phonenumber" />
+                        <label class="form-label" for="typePhoneX-1">Phone Number</label>
+                    </div>
+                    <div class="col-5  d-flex justify-content-end">
+                        <div class="form-outline mb-3 col-11 ">
+                        <input type="number" id="age" class="form-control form-control-lg" name="age" />
+                        <label class="form-label" for="typeAgeX-1">Age</label>
+                        </div>
+                    </div>
+                    </div>
+        
+                    <div class="form-outline mb-3">
+                    <input type="password" id="firstpassword" name="fpassword" class="form-control form-control-lg" />
+                    <label class="form-label" for="typePasswordX-1">Password</label>
+                    </div>
+        
+                    <div class="form-outline mb-3">
+                        <input type="password" id="secondpassword" name="spassword" class="form-control form-control-lg" />
+                        <label class="form-label" for="typeconfPasswordX-1">ConformPassword</label>
+                    </div>
+        
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Add</button>
+
+                </form>
+    
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div> -->

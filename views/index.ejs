@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+  <!-- head -->
+  <%- include('./partials/head.ejs') %>
+
+  <body>
+    <section class="vh-100" style="background-color: #030012;">
+      <div class="container py-5 h-100">
+
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-2-strong bg-dark text-white" style="border-radius: 1rem;">
+              <div class="card-body p-5 text-center">
+                
+                <form action="/login" method="post" onsubmit="return submitform(event)">
+
+                  <h3 class="mb-4">Sign in</h3>
+
+                  <div id="alert"></div>
+                  <div><p><%= err %></p></div>
+                  <div class="form-outline mb-4">
+                    <input type="text" id="username" name="username" class="form-control form-control-lg bg-dark text-white" />
+                    <label class="form-label text-white" for="typeTextX-2">User Name</label>
+                  </div>
+      
+                  <div class="form-outline mb-4">
+                    <input type="password" id="password" name="password" class="form-control form-control-lg bg-dark text-white" />
+                    <label class="form-label  text-white" for="typePasswordX-2">Password</label>
+                  </div>
+                  
+                  
+
+                  <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                  
+                  <hr class="my-4">
+                  
+                  <div>
+                    <p class="mb-0">Don't have an account? <a href="/signup" class="text-white-50 fw-bold">Sign Up</a>
+                    </p>
+                  </div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <script src="/javascripts/loginvalidation.js"></script>
+    <!-- mdb script -->
+    <%- include('./partials/adminscript.ejs') %>
+  </body>
+</html>

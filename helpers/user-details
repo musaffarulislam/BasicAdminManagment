@@ -1,0 +1,93 @@
+var db=require('../config/connection')
+var collection = require('../config/collection')
+const bcrypt=require('bcrypt')
+var objectId=require('mongodb').ObjectId
+
+module.exports={
+
+    addUser:async(user,callback)=>{
+        user.fpassword=await bcrypt.hash(user.fpassword,10)
+        user.spassword=await bcrypt.hash(user.spassword,10)
+        db.get().collection(collection.USER_COLLECTION).insertOne(user).then((data)=>{
+            callback(data)
+        })
+    },
+    getAllUsers:()=>{
+        return new Promise (async(resolve,reject)=>{
+            let users = await db.get().collection(collection.USER_COLLECTION).find().toArray()
+            resolve(users)
+        })
+    },
+    doLogin:(user)=>{
+        return new Promise(async(resolve,reject)=>{
+            let loginStatus = false
+            let response={}
+            let users = await db.get().collection(collection.USER_COLLECTION).findOne({username:user.username})
+            console.log(users)
+            if(users){
+                console.log(user)
+                bcrypt.compare(user.password,users.fpassword).then((status)=>{
+                    if(status){
+                        console.log("Login Success");
+                        response.username=users;
+                        response.status=true;
+                        resolve(response)
+                    }else{
+                        console.log("Password incorrect");
+                        resolve({status:false})
+                    }
+                })
+            }else{
+                console.log("Login Failed");
+            }
+        })
+    },
+    deleteUser:(userId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION).deleteOne({_id:objectId(userId)}).then((response)=>{
+                resolve(response)
+            })
+        })
+    },
+    getUserDetails:(userId)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(userId)}).then((user)=>{
+                resolve(user)
+            })
+        })
+    },
+    updateUser:(userId,usDetails)=>{
+        console.log(usDetails)
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.USER_COLLECTION).updateOne({_id:objectId(userId)},{
+                $set:{
+                    username:usDetails.username,
+                    email:usDetails.email,
+                    phonenumber:usDetails.phonenumber,
+                    age:usDetails.age,
+                    fpassword:usDetails.fpassword,
+                    spassword:usDetails.spassword
+                }
+            }).then((result)=>{
+                resolve(result)
+            }).catch(()=>{
+                reject()
+            })
+
+        })
+    },
+    doSearch:({username})=>{
+        return new Promise(async (resolve,reject)=>{
+            try{
+                let users = await db.get().collection(collection.USER_COLLECTION).find({username: new RegExp(username)}).toArray()
+                if(users){
+                    resolve(users);
+                }else{
+                    reject()
+                }
+            }catch{
+                reject(err)
+            }
+        })
+    }
+}
